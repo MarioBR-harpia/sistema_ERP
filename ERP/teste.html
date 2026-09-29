@@ -1,0 +1,4972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ERP AMZ Solutions</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<style>
+
+/* ==========================================================
+   VARIÁVEIS
+========================================================== */
+
+:root{
+    --bg:#f4f6f9;
+    --surface:#ffffff;
+    --surface-2:#f8fafc;
+    --surface-hover:#eef2f7;
+
+    --text:#172033;
+    --muted:#738096;
+
+    --border:#e3e8ef;
+
+    --primary:#315efb;
+    --primary-hover:#2449c7;
+
+    --success:#16a36a;
+    --success-bg:rgba(22,163,106,.10);
+
+    --danger:#e34d59;
+    --danger-bg:rgba(227,77,89,.10);
+
+    --warning:#d99100;
+    --warning-bg:rgba(217,145,0,.10);
+
+    --info:#1683d8;
+    --info-bg:rgba(22,131,216,.10);
+
+    --sidebar:#111827;
+    --sidebar-text:#aeb9ca;
+
+    --shadow:0 8px 30px rgba(23,32,51,.06);
+}
+
+body.dark-mode{
+
+    --bg:#0f1117;
+    --surface:#151922;
+    --surface-2:#191e28;
+    --surface-hover:#1d2430;
+
+    --text:#f1f5f9;
+    --muted:#8b96a8;
+
+    --border:#28303d;
+
+    --primary:#58a6ff;
+    --primary-hover:#3988e6;
+
+    --sidebar:#0b0f16;
+    --sidebar-text:#8d98aa;
+
+    --shadow:0 12px 35px rgba(0,0,0,.30);
+}
+
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:
+        Inter,
+        "Segoe UI",
+        system-ui,
+        -apple-system,
+        sans-serif;
+
+    background:var(--bg);
+    color:var(--text);
+
+    min-height:100vh;
+
+    transition:.25s;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+    outline:none;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+
+/* ==========================================================
+   SIDEBAR
+========================================================== */
+
+.sidebar{
+    position:fixed;
+
+    width:270px;
+    height:100vh;
+
+    left:0;
+    top:0;
+
+    background:var(--sidebar);
+
+    border-right:1px solid rgba(255,255,255,.06);
+
+    display:flex;
+    flex-direction:column;
+
+    z-index:1000;
+
+    transition:.25s;
+}
+
+.logo-area{
+    padding:23px 22px;
+
+    border-bottom:1px solid rgba(255,255,255,.07);
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-mark{
+    width:38px;
+    height:38px;
+
+    border-radius:10px;
+
+    background:linear-gradient(
+        135deg,
+        #315efb,
+        #58a6ff
+    );
+
+    display:grid;
+    place-items:center;
+
+    color:white;
+}
+
+.logo-text strong{
+    display:block;
+    color:white;
+    font-size:15px;
+}
+
+.logo-text span{
+    color:#7f8da4;
+    font-size:10px;
+}
+
+.user-profile{
+    display:flex;
+    align-items:center;
+
+    gap:11px;
+
+    padding:18px 20px;
+
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+
+    border-radius:50%;
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-hover)
+    );
+
+    display:grid;
+    place-items:center;
+
+    color:white;
+    font-weight:700;
+    font-size:13px;
+}
+
+.user-info{
+    min-width:0;
+}
+
+.user-info strong{
+    display:block;
+    color:white;
+    font-size:13px;
+}
+
+.user-info span{
+    color:var(--sidebar-text);
+    font-size:11px;
+}
+
+.nav-menu{
+    padding:15px 10px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:4px;
+
+    overflow-y:auto;
+}
+
+.nav-section{
+    color:#68758a;
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    font-weight:700;
+
+    padding:13px 14px 6px;
+
+    letter-spacing:.7px;
+}
+
+.nav-btn{
+    border:0;
+    background:transparent;
+
+    color:var(--sidebar-text);
+
+    padding:11px 13px;
+
+    border-radius:8px;
+
+    display:flex;
+    align-items:center;
+
+    gap:11px;
+
+    text-align:left;
+
+    font-size:13px;
+
+    transition:.18s;
+
+    width:100%;
+}
+
+.nav-btn:hover{
+    background:rgba(255,255,255,.055);
+    color:white;
+}
+
+.nav-btn.active{
+    background:rgba(88,166,255,.11);
+
+    color:var(--primary);
+
+    box-shadow:
+        inset 3px 0 0 var(--primary);
+}
+
+.nav-icon{
+    width:20px;
+    height:20px;
+
+    display:grid;
+    place-items:center;
+
+    flex-shrink:0;
+}
+
+.nav-icon svg{
+    width:17px;
+    height:17px;
+}
+
+.nav-badge{
+    margin-left:auto;
+
+    font-size:9px;
+
+    padding:2px 6px;
+
+    border-radius:20px;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-weight:700;
+}
+
+.nav-spacer{
+    flex:1;
+}
+
+.btn-ia{
+    background:
+        linear-gradient(
+            90deg,
+            rgba(88,166,255,.15),
+            transparent
+        );
+
+    border:1px solid rgba(88,166,255,.20);
+}
+
+
+/* ==========================================================
+   MAIN
+========================================================== */
+
+.main-container{
+    margin-left:270px;
+
+    min-height:100vh;
+
+    display:flex;
+    flex-direction:column;
+
+    width:calc(100% - 270px);
+}
+
+.topbar{
+    height:68px;
+
+    background:var(--surface);
+
+    border-bottom:1px solid var(--border);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 32px;
+
+    position:sticky;
+    top:0;
+
+    z-index:500;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+.topbar-title{
+    color:var(--muted);
+    font-size:14px;
+    font-weight:600;
+}
+
+.topbar-actions{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.icon-btn{
+    width:38px;
+    height:38px;
+
+    border-radius:9px;
+
+    border:1px solid var(--border);
+
+    background:var(--surface-2);
+
+    color:var(--text);
+
+    display:grid;
+    place-items:center;
+
+    transition:.2s;
+}
+
+.icon-btn:hover{
+    border-color:var(--primary);
+    color:var(--primary);
+}
+
+.icon-btn svg{
+    width:17px;
+}
+
+.main-content{
+    padding:30px;
+
+    width:100%;
+}
+
+.module-page{
+    display:none;
+}
+
+.module-page.active{
+    display:block;
+
+    animation:fadeIn .25s ease;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(5px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+/* ==========================================================
+   HEADERS
+========================================================== */
+
+.module-header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-end;
+
+    gap:20px;
+
+    margin-bottom:25px;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.module-header h1{
+    font-size:23px;
+    font-weight:650;
+
+    margin-bottom:5px;
+}
+
+.module-header p{
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+.header-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+
+/* ==========================================================
+   BOTÕES
+========================================================== */
+
+.primary-btn,
+.danger-btn,
+.success-btn,
+.warning-btn,
+.small-btn{
+
+    border-radius:8px;
+
+    padding:9px 13px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    transition:.18s;
+
+    border:1px solid transparent;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+}
+
+.primary-btn{
+    background:var(--primary);
+    color:white;
+}
+
+.primary-btn:hover{
+    background:var(--primary-hover);
+    transform:translateY(-1px);
+}
+
+.success-btn{
+    background:var(--success);
+    color:white;
+}
+
+.danger-btn{
+    background:var(--danger);
+    color:white;
+}
+
+.warning-btn{
+    background:var(--warning);
+    color:white;
+}
+
+.small-btn{
+    background:var(--surface);
+    color:var(--text);
+    border-color:var(--border);
+}
+
+.small-btn:hover{
+    background:var(--surface-hover);
+}
+
+.danger-outline{
+    color:var(--danger);
+    border-color:var(--danger);
+}
+
+
+/* ==========================================================
+   CARDS
+========================================================== */
+
+.card{
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:20px;
+}
+
+
+/* ==========================================================
+   KPIS
+========================================================== */
+
+.kpi-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(190px,1fr)
+        );
+
+    gap:14px;
+
+    margin-bottom:22px;
+}
+
+.kpi-card{
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:18px;
+
+    box-shadow:var(--shadow);
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.kpi-card::after{
+    content:"";
+
+    position:absolute;
+
+    width:60px;
+    height:60px;
+
+    right:-20px;
+    top:-20px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    opacity:.05;
+}
+
+.kpi-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:10px;
+}
+
+.kpi-title{
+    font-size:11px;
+
+    color:var(--muted);
+
+    font-weight:600;
+}
+
+.kpi-icon{
+    width:32px;
+    height:32px;
+
+    border-radius:8px;
+
+    display:grid;
+
+    place-items:center;
+}
+
+.kpi-icon svg{
+    width:15px;
+}
+
+.kpi-value{
+    font-size:22px;
+
+    font-weight:750;
+
+    margin-bottom:7px;
+}
+
+.kpi-footer{
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    font-size:10px;
+
+    color:var(--muted);
+}
+
+.positive{
+    color:var(--success);
+}
+
+.negative{
+    color:var(--danger);
+}
+
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.grid-2{
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1.7fr)
+        minmax(280px,1fr);
+
+    gap:20px;
+
+    margin-bottom:20px;
+}
+
+.grid-3{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+    gap:15px;
+}
+
+.chart-container{
+    position:relative;
+
+    height:270px;
+
+    width:100%;
+}
+
+
+/* ==========================================================
+   FILTROS
+========================================================== */
+
+.filter-bar{
+    display:flex;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    background:var(--surface-2);
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    padding:11px;
+
+    margin-bottom:17px;
+}
+
+.search-wrap{
+    position:relative;
+
+    flex:1;
+
+    min-width:220px;
+}
+
+.search-wrap svg{
+    position:absolute;
+
+    left:11px;
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:15px;
+
+    color:var(--muted);
+}
+
+.search-wrap input{
+    padding-left:34px;
+}
+
+.input-padrao,
+select,
+textarea{
+
+    width:100%;
+
+    padding:9px 11px;
+
+    border-radius:8px;
+
+    border:1px solid var(--border);
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    font-size:11px;
+
+    transition:.2s;
+}
+
+.input-padrao:focus,
+select:focus,
+textarea:focus{
+
+    border-color:var(--primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(49,94,251,.10);
+}
+
+
+/* ==========================================================
+   TABELAS
+========================================================== */
+
+.table-scroll{
+    overflow-x:auto;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+
+    background:var(--surface);
+}
+
+table{
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:760px;
+}
+
+th{
+    text-align:left;
+
+    padding:12px 15px;
+
+    background:var(--surface-2);
+
+    color:var(--muted);
+
+    font-size:9px;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:12px 15px;
+
+    border-bottom:1px solid var(--border);
+
+    font-size:11px;
+}
+
+tr:last-child td{
+    border-bottom:0;
+}
+
+tr:hover td{
+    background:var(--surface-hover);
+}
+
+.status{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    border-radius:20px;
+
+    padding:4px 8px;
+
+    font-size:9px;
+
+    font-weight:700;
+}
+
+.status::before{
+    content:"";
+
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:currentColor;
+}
+
+.status-success{
+    color:var(--success);
+    background:var(--success-bg);
+}
+
+.status-danger{
+    color:var(--danger);
+    background:var(--danger-bg);
+}
+
+.status-warning{
+    color:var(--warning);
+    background:var(--warning-bg);
+}
+
+.status-info{
+    color:var(--info);
+    background:var(--info-bg);
+}
+
+
+/* ==========================================================
+   MINI CARDS
+========================================================== */
+
+.mini-list{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:3px;
+}
+
+.mini-row{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:11px 5px;
+
+    border-bottom:1px solid var(--border);
+
+    font-size:11px;
+}
+
+.mini-row:last-child{
+    border-bottom:0;
+}
+
+.mini-name{
+    font-weight:600;
+}
+
+.mini-muted{
+    color:var(--muted);
+
+    font-size:9px;
+}
+
+
+/* ==========================================================
+   TABS
+========================================================== */
+
+.tabs{
+    display:flex;
+
+    gap:3px;
+
+    background:var(--surface-2);
+
+    border:1px solid var(--border);
+
+    padding:4px;
+
+    border-radius:9px;
+
+    margin-bottom:18px;
+
+    width:max-content;
+
+    max-width:100%;
+
+    overflow:auto;
+}
+
+.tab-btn{
+    border:0;
+
+    background:transparent;
+
+    color:var(--muted);
+
+    padding:8px 13px;
+
+    border-radius:6px;
+
+    font-size:10px;
+
+    font-weight:650;
+
+    white-space:nowrap;
+}
+
+.tab-btn.active{
+    background:var(--surface);
+
+    color:var(--primary);
+
+    box-shadow:0 2px 6px rgba(0,0,0,.06);
+}
+
+.tab-content{
+    display:none;
+}
+
+.tab-content.active{
+    display:block;
+}
+
+
+/* ==========================================================
+   CADASTRO
+========================================================== */
+
+.form-card{
+    border:1px solid var(--primary);
+
+    box-shadow:
+        0 0 30px rgba(49,94,251,.08);
+
+    position:relative;
+}
+
+.form-card::before{
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:3px;
+
+    background:var(--primary);
+}
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px,1fr)
+        );
+
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:10px;
+
+    color:var(--muted);
+
+    font-weight:700;
+
+    text-transform:uppercase;
+}
+
+.form-actions{
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:8px;
+
+    margin-top:22px;
+
+    padding-top:17px;
+
+    border-top:1px solid var(--border);
+}
+
+
+/* ==========================================================
+   IA
+========================================================== */
+
+.ai-container{
+    max-width:900px;
+
+    margin:0 auto;
+}
+
+.ai-header{
+    text-align:center;
+
+    padding:25px 0;
+}
+
+.ai-icon{
+    width:58px;
+    height:58px;
+
+    margin:0 auto 12px;
+
+    border-radius:16px;
+
+    display:grid;
+    place-items:center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #315efb,
+            #58a6ff
+        );
+
+    color:white;
+
+    box-shadow:
+        0 8px 25px
+        rgba(49,94,251,.25);
+}
+
+.ai-header h1{
+    font-size:25px;
+}
+
+.ai-header p{
+    color:var(--muted);
+
+    font-size:12px;
+
+    margin-top:5px;
+}
+
+.ai-chat{
+    min-height:420px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    padding:20px;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(49,94,251,.07),
+            transparent 35%
+        ),
+        var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    box-shadow:var(--shadow);
+}
+
+.ai-message{
+    max-width:80%;
+
+    padding:13px 15px;
+
+    border-radius:10px;
+
+    font-size:11px;
+
+    line-height:1.6;
+}
+
+.ai-message.system{
+    background:var(--surface-2);
+
+    border:1px solid var(--border);
+
+    align-self:flex-start;
+}
+
+.ai-message.user{
+    background:var(--primary);
+
+    color:white;
+
+    align-self:flex-end;
+}
+
+.ai-input{
+    display:flex;
+
+    gap:8px;
+
+    margin-top:10px;
+}
+
+.ai-input input{
+    flex:1;
+}
+
+.ai-suggestions{
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+
+    margin-top:12px;
+}
+
+.ai-suggestion{
+    border:1px solid var(--border);
+
+    background:var(--surface);
+
+    color:var(--text);
+
+    border-radius:20px;
+
+    padding:7px 10px;
+
+    font-size:9px;
+}
+
+
+/* ==========================================================
+   MODAL
+========================================================== */
+
+.modal-overlay{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.72);
+
+    backdrop-filter:blur(5px);
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:3000;
+}
+
+.modal-overlay.active{
+    display:flex;
+}
+
+.modal{
+    width:92%;
+
+    max-width:430px;
+
+    background:var(--surface);
+
+    border:1px solid var(--border);
+
+    border-radius:13px;
+
+    padding:25px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.35);
+
+    animation:modalIn .2s ease;
+}
+
+@keyframes modalIn{
+    from{
+        opacity:0;
+        transform:translateY(-10px) scale(.98);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+.modal-icon{
+    width:45px;
+    height:45px;
+
+    border-radius:12px;
+
+    display:grid;
+    place-items:center;
+
+    background:var(--danger-bg);
+
+    color:var(--danger);
+
+    margin-bottom:14px;
+}
+
+.modal h3{
+    font-size:17px;
+
+    margin-bottom:7px;
+}
+
+.modal p{
+    color:var(--muted);
+
+    font-size:11px;
+
+    line-height:1.6;
+
+    margin-bottom:20px;
+}
+
+.modal-actions{
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:8px;
+}
+
+
+/* ==========================================================
+   TOAST
+========================================================== */
+
+.toast{
+    position:fixed;
+
+    right:20px;
+    bottom:20px;
+
+    min-width:240px;
+
+    max-width:350px;
+
+    padding:12px 15px;
+
+    border-radius:9px;
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    opacity:0;
+
+    transform:translateY(12px);
+
+    pointer-events:none;
+
+    transition:.25s;
+
+    z-index:4000;
+}
+
+.toast.show{
+    opacity:1;
+
+    transform:translateY(0);
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main-container{
+        margin-left:0;
+
+        width:100%;
+    }
+
+    .mobile-menu{
+        display:grid;
+    }
+
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+
+    .grid-3{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .main-content{
+        padding:18px;
+    }
+
+    .topbar{
+        padding:0 16px;
+    }
+
+    .module-header{
+        align-items:flex-start;
+
+        flex-direction:column;
+    }
+
+    .header-actions{
+        width:100%;
+    }
+
+    .header-actions button{
+        flex:1;
+    }
+
+    .grid-3{
+        grid-template-columns:1fr;
+    }
+
+    .kpi-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .kpi-value{
+        font-size:18px;
+    }
+
+    .tabs{
+        width:100%;
+    }
+
+    .tab-btn{
+        flex:1;
+    }
+}
+
+</style>
+</head>
+
+
+<body class="dark-mode">
+
+
+<!-- ==========================================================
+     SIDEBAR
+========================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo-area">
+
+        <div class="logo-mark">
+            <i data-lucide="boxes"></i>
+        </div>
+
+        <div class="logo-text">
+            <strong>AMZ Solutions</strong>
+            <span>ERP CORPORATIVO</span>
+        </div>
+
+    </div>
+
+
+    <div class="user-profile">
+
+        <div class="avatar">MC</div>
+
+        <div class="user-info">
+            <strong>Mario Carvalho</strong>
+            <span>Administrador ERP</span>
+        </div>
+
+    </div>
+
+
+    <nav class="nav-menu">
+
+        <div class="nav-section">Visão geral</div>
+
+        <button class="nav-btn active"
+                onclick="abrirModulo('dashboard',this)">
+            <span class="nav-icon">
+                <i data-lucide="layout-dashboard"></i>
+            </span>
+            Dashboard
+        </button>
+
+
+        <div class="nav-section">Operações</div>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('vendas',this)">
+            <span class="nav-icon">
+                <i data-lucide="shopping-cart"></i>
+            </span>
+            Vendas
+        </button>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('compras',this)">
+            <span class="nav-icon">
+                <i data-lucide="shopping-bag"></i>
+            </span>
+            Compras
+        </button>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('estoque',this)">
+            <span class="nav-icon">
+                <i data-lucide="package"></i>
+            </span>
+            Estoque
+        </button>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('logistica',this)">
+            <span class="nav-icon">
+                <i data-lucide="truck"></i>
+            </span>
+            Logística
+        </button>
+
+
+        <div class="nav-section">Gestão</div>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('financeiro',this)">
+            <span class="nav-icon">
+                <i data-lucide="wallet"></i>
+            </span>
+            Financeiro
+        </button>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('fiscal',this)">
+            <span class="nav-icon">
+                <i data-lucide="file-text"></i>
+            </span>
+            Fiscal e Contábil
+        </button>
+
+        <button class="nav-btn"
+                onclick="abrirModulo('pessoas',this)">
+            <span class="nav-icon">
+                <i data-lucide="users"></i>
+            </span>
+            Pessoas
+        </button>
+
+
+        <div class="nav-spacer"></div>
+
+
+        <button class="nav-btn btn-ia"
+                onclick="abrirModulo('modo_ia',this)">
+
+            <span class="nav-icon">
+                <i data-lucide="sparkles"></i>
+            </span>
+
+            Modo IA
+
+            <span class="nav-badge">
+                BETA
+            </span>
+
+        </button>
+
+
+        <button class="nav-btn"
+                onclick="abrirModulo('configuracoes',this)">
+
+            <span class="nav-icon">
+                <i data-lucide="settings"></i>
+            </span>
+
+            Configurações
+
+        </button>
+
+    </nav>
+
+</aside>
+
+
+
+<!-- ==========================================================
+     MAIN
+========================================================== -->
+
+<div class="main-container">
+
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button class="icon-btn mobile-menu"
+                onclick="toggleSidebar()">
+
+            <i data-lucide="menu"></i>
+
+        </button>
+
+        <div class="topbar-title"
+             id="topbarTitle">
+
+            Módulo: Dashboard
+
+        </div>
+
+    </div>
+
+
+    <div class="topbar-actions">
+
+        <button class="icon-btn"
+                title="Notificações"
+                onclick="showToast('Você possui 3 notificações pendentes.')">
+
+            <i data-lucide="bell"></i>
+
+        </button>
+
+
+        <button class="icon-btn"
+                id="themeToggle"
+                title="Alternar tema">
+
+            <i data-lucide="sun"></i>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<main class="main-content">
+
+
+<!-- ==========================================================
+     DASHBOARD
+========================================================== -->
+
+<section id="dashboard"
+         class="module-page active">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Dashboard Geral</h1>
+
+            <p>
+                Visão estratégica da operação financeira,
+                comercial e logística.
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <select id="dashboardAno"
+                    style="width:100px">
+
+                <option>2026</option>
+                <option>2025</option>
+                <option>2024</option>
+
+            </select>
+
+            <button class="small-btn"
+                    onclick="showToast('Dashboard atualizado.')">
+
+                <i data-lucide="refresh-cw"></i>
+                Atualizar
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-title">
+                    Faturamento
+                </div>
+
+                <div class="kpi-icon"
+                     style="background:var(--info-bg);color:var(--info)">
+
+                    <i data-lucide="trending-up"></i>
+
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                R$ 93.900
+            </div>
+
+            <div class="kpi-footer">
+                <span class="positive">+8,4%</span>
+                vs. mês anterior
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-title">
+                    Margem Bruta
+                </div>
+
+                <div class="kpi-icon"
+                     style="background:var(--success-bg);color:var(--success)">
+
+                    <i data-lucide="percent"></i>
+
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                R$ 24.380
+            </div>
+
+            <div class="kpi-footer">
+                <span class="positive">26,0%</span>
+                de margem
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-title">
+                    Contas a Receber
+                </div>
+
+                <div class="kpi-icon"
+                     style="background:var(--warning-bg);color:var(--warning)">
+
+                    <i data-lucide="arrow-down-left"></i>
+
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                R$ 31.200
+            </div>
+
+            <div class="kpi-footer">
+                7 títulos em aberto
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-title">
+                    Contas a Pagar
+                </div>
+
+                <div class="kpi-icon"
+                     style="background:var(--danger-bg);color:var(--danger)">
+
+                    <i data-lucide="arrow-up-right"></i>
+
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                R$ 18.450
+            </div>
+
+            <div class="kpi-footer">
+                5 títulos pendentes
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-title">
+                    Estoque
+                </div>
+
+                <div class="kpi-icon"
+                     style="background:var(--info-bg);color:var(--info)">
+
+                    <i data-lucide="package"></i>
+
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                R$ 147.800
+            </div>
+
+            <div class="kpi-footer">
+                3 itens críticos
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-title">
+                    Pedidos Abertos
+                </div>
+
+                <div class="kpi-icon"
+                     style="background:var(--success-bg);color:var(--success)">
+
+                    <i data-lucide="clipboard-list"></i>
+
+                </div>
+
+            </div>
+
+            <div class="kpi-value">
+                14
+            </div>
+
+            <div class="kpi-footer">
+                4 aguardando entrega
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="grid-2">
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px">
+                Evolução do Faturamento
+            </h3>
+
+            <p style="font-size:10px;color:var(--muted);margin-top:3px">
+                Comparativo mensal de 2026
+            </p>
+
+            <div class="chart-container">
+                <canvas id="dashChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px;margin-bottom:12px">
+                Pedidos Recentes
+            </h3>
+
+            <div class="mini-list">
+
+                <div class="mini-row">
+                    <div>
+                        <div class="mini-name">#PED-1048</div>
+                        <div class="mini-muted">Tech Norte</div>
+                    </div>
+
+                    <strong>R$ 8.400</strong>
+                </div>
+
+
+                <div class="mini-row">
+                    <div>
+                        <div class="mini-name">#PED-1047</div>
+                        <div class="mini-muted">Comércio Solimões</div>
+                    </div>
+
+                    <strong>R$ 5.280</strong>
+                </div>
+
+
+                <div class="mini-row">
+                    <div>
+                        <div class="mini-name">#PED-1046</div>
+                        <div class="mini-muted">Indústria Manaus</div>
+                    </div>
+
+                    <strong>R$ 12.900</strong>
+                </div>
+
+
+                <div class="mini-row">
+                    <div>
+                        <div class="mini-name">#PED-1045</div>
+                        <div class="mini-muted">Amazon Tech</div>
+                    </div>
+
+                    <strong>R$ 4.200</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="grid-2">
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px;margin-bottom:15px">
+                Fluxo Financeiro
+            </h3>
+
+            <div class="chart-container"
+                 style="height:220px">
+
+                <canvas id="financeChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px;margin-bottom:10px">
+                Alertas Operacionais
+            </h3>
+
+            <div class="mini-list">
+
+                <div class="mini-row">
+
+                    <span>
+                        Estoque crítico
+                    </span>
+
+                    <span class="status status-danger">
+                        3 itens
+                    </span>
+
+                </div>
+
+                <div class="mini-row">
+
+                    <span>
+                        Entregas atrasadas
+                    </span>
+
+                    <span class="status status-warning">
+                        4 pedidos
+                    </span>
+
+                </div>
+
+                <div class="mini-row">
+
+                    <span>
+                        Contas vencendo
+                    </span>
+
+                    <span class="status status-info">
+                        5 títulos
+                    </span>
+
+                </div>
+
+                <div class="mini-row">
+
+                    <span>
+                        Pedidos em análise
+                    </span>
+
+                    <span class="status status-success">
+                        6 pedidos
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     VENDAS
+========================================================== -->
+
+<section id="vendas"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Vendas</h1>
+
+            <p>
+                Gestão de pedidos, orçamentos e clientes.
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button class="small-btn"
+                    onclick="abrirCadastro('cliente')">
+
+                <i data-lucide="user-plus"></i>
+                Novo Cliente
+
+            </button>
+
+            <button class="primary-btn"
+                    onclick="abrirCadastro('pedido')">
+
+                <i data-lucide="plus"></i>
+                Novo Pedido
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="tabs">
+
+        <button class="tab-btn active"
+                onclick="abrirAba(this,'vendas-pedidos')">
+
+            Pedidos
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="abrirAba(this,'vendas-orcamentos')">
+
+            Orçamentos
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="abrirAba(this,'vendas-clientes')">
+
+            Clientes
+
+        </button>
+
+    </div>
+
+
+
+    <div id="vendas-pedidos"
+         class="tab-content active">
+
+        <div class="filter-bar">
+
+            <div class="search-wrap">
+
+                <i data-lucide="search"></i>
+
+                <input class="input-padrao"
+                       placeholder="Pesquisar pedido ou cliente..."
+                       oninput="filtrarTabela(this,'tabelaPedidos')">
+
+            </div>
+
+            <select style="width:150px">
+                <option>Todos os status</option>
+                <option>Confirmado</option>
+                <option>Em análise</option>
+                <option>Cancelado</option>
+            </select>
+
+            <button class="small-btn"
+                    onclick="showToast('Lista atualizada.')">
+
+                <i data-lucide="refresh-cw"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="table-scroll">
+
+            <table id="tabelaPedidos">
+
+                <thead>
+
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th>Vendedor</th>
+                        <th>Status</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>#PED-1048</strong></td>
+                        <td>24/09/2026</td>
+                        <td>Tech Norte</td>
+                        <td>Flávio</td>
+                        <td>
+                            <span class="status status-success">
+                                Confirmado
+                            </span>
+                        </td>
+                        <td>R$ 8.400,00</td>
+                        <td>
+                            <button class="small-btn"
+                                    onclick="showToast('Pedido #PED-1048 selecionado.')">
+                                Ver
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td><strong>#PED-1047</strong></td>
+                        <td>23/09/2026</td>
+                        <td>Comércio Solimões</td>
+                        <td>Patrícia</td>
+                        <td>
+                            <span class="status status-warning">
+                                Em análise
+                            </span>
+                        </td>
+                        <td>R$ 5.280,00</td>
+                        <td>
+                            <button class="small-btn">Ver</button>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td><strong>#PED-1046</strong></td>
+                        <td>22/09/2026</td>
+                        <td>Indústria Manaus</td>
+                        <td>Ronald</td>
+                        <td>
+                            <span class="status status-success">
+                                Confirmado
+                            </span>
+                        </td>
+                        <td>R$ 12.900,00</td>
+                        <td>
+                            <button class="small-btn">Ver</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="vendas-orcamentos"
+         class="tab-content">
+
+        <div class="card">
+
+            <div class="filter-bar">
+
+                <div class="search-wrap">
+
+                    <i data-lucide="search"></i>
+
+                    <input class="input-padrao"
+                           placeholder="Pesquisar orçamento...">
+
+                </div>
+
+                <button class="primary-btn"
+                        onclick="showToast('Novo orçamento iniciado.')">
+
+                    <i data-lucide="plus"></i>
+                    Novo Orçamento
+
+                </button>
+
+            </div>
+
+
+            <div class="table-scroll">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Orçamento</th>
+                            <th>Cliente</th>
+                            <th>Emissão</th>
+                            <th>Validade</th>
+                            <th>Valor</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>#ORC-302</td>
+                            <td>Amazon Tech</td>
+                            <td>24/09/2026</td>
+                            <td>01/10/2026</td>
+                            <td>R$ 18.400</td>
+                            <td>
+                                <span class="status status-info">
+                                    Enviado
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>#ORC-301</td>
+                            <td>Indústria Norte</td>
+                            <td>23/09/2026</td>
+                            <td>30/09/2026</td>
+                            <td>R$ 9.850</td>
+                            <td>
+                                <span class="status status-warning">
+                                    Aguardando
+                                </span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="vendas-clientes"
+         class="tab-content">
+
+        <div class="filter-bar">
+
+            <div class="search-wrap">
+
+                <i data-lucide="search"></i>
+
+                <input class="input-padrao"
+                       placeholder="Pesquisar cliente..."
+                       oninput="filtrarTabela(this,'tabelaClientes')">
+
+            </div>
+
+            <button class="primary-btn"
+                    onclick="abrirCadastro('cliente')">
+
+                <i data-lucide="plus"></i>
+                Novo Cliente
+
+            </button>
+
+        </div>
+
+
+        <div class="table-scroll">
+
+            <table id="tabelaClientes">
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Razão Social</th>
+                        <th>CNPJ</th>
+                        <th>Telefone</th>
+                        <th>Última Compra</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>#001</td>
+                        <td><strong>Tech Norte Indústria</strong></td>
+                        <td>11.222.333/0001-44</td>
+                        <td>(92) 98888-7777</td>
+                        <td>24/09/2026</td>
+                        <td>
+                            <button class="small-btn">Detalhes</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>#002</td>
+                        <td><strong>Comércio Solimões</strong></td>
+                        <td>22.333.444/0001-55</td>
+                        <td>(92) 97777-6666</td>
+                        <td>23/09/2026</td>
+                        <td>
+                            <button class="small-btn">Detalhes</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     COMPRAS
+========================================================== -->
+
+<section id="compras"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Compras</h1>
+
+            <p>
+                Gestão de fornecedores e ordens de compra.
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button class="small-btn"
+                    onclick="abrirCadastro('fornecedor')">
+
+                <i data-lucide="user-plus"></i>
+                Novo Fornecedor
+
+            </button>
+
+            <button class="primary-btn"
+                    onclick="abrirCadastro('compra')">
+
+                <i data-lucide="plus"></i>
+                Nova Compra
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-title">Compras no mês</div>
+            <div class="kpi-value">R$ 54.280</div>
+            <div class="kpi-footer">
+                <span class="positive">+5,2%</span>
+                vs. mês anterior
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">Pedidos em aberto</div>
+            <div class="kpi-value">12</div>
+            <div class="kpi-footer">4 aguardando aprovação</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">Fornecedores ativos</div>
+            <div class="kpi-value">38</div>
+            <div class="kpi-footer">5 novos este mês</div>
+        </div>
+
+    </div>
+
+
+    <div class="filter-bar">
+
+        <div class="search-wrap">
+
+            <i data-lucide="search"></i>
+
+            <input class="input-padrao"
+                   placeholder="Pesquisar compra ou fornecedor...">
+
+        </div>
+
+        <select style="width:150px">
+            <option>Todos os status</option>
+            <option>Aberta</option>
+            <option>Aprovada</option>
+            <option>Recebida</option>
+        </select>
+
+    </div>
+
+
+    <div class="table-scroll">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Compra</th>
+                    <th>Fornecedor</th>
+                    <th>Emissão</th>
+                    <th>NF</th>
+                    <th>Custo</th>
+                    <th>Frete</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>#COMP-083</td>
+                    <td>Metalúrgica Global</td>
+                    <td>24/09/2026</td>
+                    <td>45821</td>
+                    <td>R$ 12.500</td>
+                    <td>R$ 850</td>
+                    <td>
+                        <span class="status status-success">
+                            Recebida
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Ver</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>#COMP-082</td>
+                    <td>Distribuidora Central</td>
+                    <td>23/09/2026</td>
+                    <td>45791</td>
+                    <td>R$ 7.200</td>
+                    <td>R$ 430</td>
+                    <td>
+                        <span class="status status-warning">
+                            Em trânsito
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Ver</button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     ESTOQUE
+========================================================== -->
+
+<section id="estoque"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Estoque</h1>
+
+            <p>
+                Controle de produtos, inventário e movimentações.
+            </p>
+
+        </div>
+
+        <div class="header-actions">
+
+            <button class="small-btn"
+                    onclick="abrirCadastro('categoria')">
+
+                <i data-lucide="folder-plus"></i>
+                Categoria
+
+            </button>
+
+            <button class="primary-btn"
+                    onclick="abrirCadastro('produto')">
+
+                <i data-lucide="plus"></i>
+                Novo Produto
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Valor em Estoque
+            </div>
+
+            <div class="kpi-value">
+                R$ 147.800
+            </div>
+
+            <div class="kpi-footer">
+                428 produtos
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Estoque Crítico
+            </div>
+
+            <div class="kpi-value"
+                 style="color:var(--danger)">
+                3
+            </div>
+
+            <div class="kpi-footer">
+                Reposição necessária
+            </div>
+
+        </div>
+
+
+        <div class="kpi-card">
+
+            <div class="kpi-title">
+                Movimentações
+            </div>
+
+            <div class="kpi-value">
+                184
+            </div>
+
+            <div class="kpi-footer">
+                Neste mês
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="filter-bar">
+
+        <div class="search-wrap">
+
+            <i data-lucide="search"></i>
+
+            <input class="input-padrao"
+                   placeholder="Pesquisar produto ou SKU..."
+                   oninput="filtrarTabela(this,'tabelaEstoque')">
+
+        </div>
+
+        <select style="width:170px">
+
+            <option>Todas as categorias</option>
+            <option>Peças</option>
+            <option>Equipamentos</option>
+            <option>Materiais</option>
+
+        </select>
+
+        <select style="width:150px">
+
+            <option>Todos</option>
+            <option>Normal</option>
+            <option>Crítico</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="table-scroll">
+
+        <table id="tabelaEstoque">
+
+            <thead>
+
+                <tr>
+                    <th>SKU</th>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Estoque</th>
+                    <th>Mínimo</th>
+                    <th>Valor Unit.</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>MT-001</td>
+                    <td><strong>Motor Industrial X</strong></td>
+                    <td>Equipamentos</td>
+                    <td>42</td>
+                    <td>10</td>
+                    <td>R$ 1.850</td>
+                    <td>
+                        <span class="status status-success">
+                            Normal
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Detalhes</button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>RL-002</td>
+                    <td><strong>Rolamento Industrial</strong></td>
+                    <td>Peças</td>
+                    <td>4</td>
+                    <td>10</td>
+                    <td>R$ 84</td>
+                    <td>
+                        <span class="status status-danger">
+                            Crítico
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Reposição</button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>CB-003</td>
+                    <td><strong>Cabo de Energia 10mm</strong></td>
+                    <td>Materiais</td>
+                    <td>85</td>
+                    <td>30</td>
+                    <td>R$ 42</td>
+                    <td>
+                        <span class="status status-success">
+                            Normal
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Detalhes</button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     LOGÍSTICA
+========================================================== -->
+
+<section id="logistica"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Logística</h1>
+
+            <p>
+                Rastreamento e controle das entregas.
+            </p>
+
+        </div>
+
+        <button class="primary-btn"
+                onclick="abrirCadastro('transportadora')">
+
+            <i data-lucide="plus"></i>
+            Nova Transportadora
+
+        </button>
+
+    </div>
+
+
+    <div class="filter-bar">
+
+        <div class="search-wrap">
+
+            <i data-lucide="search"></i>
+
+            <input class="input-padrao"
+                   placeholder="Pesquisar pedido ou rastreio...">
+
+        </div>
+
+        <select style="width:160px">
+
+            <option>Todos os status</option>
+            <option>Preparando</option>
+            <option>Em trânsito</option>
+            <option>Entregue</option>
+            <option>Atrasado</option>
+
+        </select>
+
+    </div>
+
+
+    <div class="table-scroll">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Pedido</th>
+                    <th>Transportadora</th>
+                    <th>Rastreio</th>
+                    <th>Origem</th>
+                    <th>Previsão</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>#PED-1048</td>
+                    <td>Navegação Amazonas</td>
+                    <td>AMZ-92831</td>
+                    <td>Manaus</td>
+                    <td>27/09/2026</td>
+                    <td>
+                        <span class="status status-info">
+                            Em trânsito
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Rastrear</button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>#PED-1045</td>
+                    <td>Logística Rápida</td>
+                    <td>LR-18273</td>
+                    <td>Manaus</td>
+                    <td>22/09/2026</td>
+                    <td>
+                        <span class="status status-danger">
+                            Atrasado
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">Rastrear</button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     FINANCEIRO
+========================================================== -->
+
+<section id="financeiro"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Financeiro</h1>
+
+            <p>
+                Contas a pagar, receber e fluxo de caixa.
+            </p>
+
+        </div>
+
+        <button class="primary-btn"
+                onclick="abrirCadastro('movimentacao')">
+
+            <i data-lucide="plus"></i>
+            Nova Movimentação
+
+        </button>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-title">Saldo Atual</div>
+            <div class="kpi-value">R$ 23.850</div>
+            <div class="kpi-footer positive">Disponível</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">A Receber</div>
+            <div class="kpi-value">R$ 31.200</div>
+            <div class="kpi-footer">7 títulos</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">A Pagar</div>
+            <div class="kpi-value">R$ 18.450</div>
+            <div class="kpi-footer">5 títulos</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">Vencidos</div>
+            <div class="kpi-value"
+                 style="color:var(--danger)">
+                R$ 4.800
+            </div>
+            <div class="kpi-footer">2 títulos</div>
+        </div>
+
+    </div>
+
+
+    <div class="tabs">
+
+        <button class="tab-btn active"
+                onclick="abrirAba(this,'fin-receber')">
+
+            Contas a Receber
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="abrirAba(this,'fin-pagar')">
+
+            Contas a Pagar
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="abrirAba(this,'fin-fluxo')">
+
+            Fluxo de Caixa
+
+        </button>
+
+    </div>
+
+
+    <div id="fin-receber"
+         class="tab-content active">
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Documento</th>
+                        <th>Vencimento</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Tech Norte</td>
+                        <td>REC-0841</td>
+                        <td>28/09/2026</td>
+                        <td>R$ 8.400</td>
+                        <td>
+                            <span class="status status-warning">
+                                Em aberto
+                            </span>
+                        </td>
+                        <td>
+                            <button class="small-btn">
+                                Baixar
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Comércio Solimões</td>
+                        <td>REC-0840</td>
+                        <td>20/09/2026</td>
+                        <td>R$ 4.200</td>
+                        <td>
+                            <span class="status status-danger">
+                                Vencido
+                            </span>
+                        </td>
+                        <td>
+                            <button class="small-btn">
+                                Cobrar
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div id="fin-pagar"
+         class="tab-content">
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Fornecedor</th>
+                        <th>Documento</th>
+                        <th>Vencimento</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Metalúrgica Global</td>
+                        <td>PAG-0432</td>
+                        <td>30/09/2026</td>
+                        <td>R$ 12.500</td>
+                        <td>
+                            <span class="status status-warning">
+                                Pendente
+                            </span>
+                        </td>
+                        <td>
+                            <button class="small-btn">
+                                Pagar
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div id="fin-fluxo"
+         class="tab-content">
+
+        <div class="card">
+
+            <div class="chart-container">
+
+                <canvas id="cashChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     FISCAL
+========================================================== -->
+
+<section id="fiscal"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Fiscal e Contábil</h1>
+
+            <p>
+                Controle de documentos e movimentações fiscais.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="kpi-grid">
+
+        <div class="kpi-card">
+            <div class="kpi-title">NF-e Emitidas</div>
+            <div class="kpi-value">124</div>
+            <div class="kpi-footer">Setembro/2026</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">NF-e Recebidas</div>
+            <div class="kpi-value">86</div>
+            <div class="kpi-footer">Setembro/2026</div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-title">Documentos Pendentes</div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-footer negative">Atenção necessária</div>
+        </div>
+
+    </div>
+
+
+    <div class="tabs">
+
+        <button class="tab-btn active"
+                onclick="abrirAba(this,'nf-saida')">
+
+            Notas de Saída
+
+        </button>
+
+        <button class="tab-btn"
+                onclick="abrirAba(this,'nf-entrada')">
+
+            Notas de Entrada
+
+        </button>
+
+    </div>
+
+
+    <div id="nf-saida"
+         class="tab-content active">
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>NF</th>
+                        <th>Cliente</th>
+                        <th>Emissão</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>00045821</td>
+                        <td>Tech Norte</td>
+                        <td>24/09/2026</td>
+                        <td>R$ 8.400</td>
+                        <td>
+                            <span class="status status-success">
+                                Autorizada
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>00045820</td>
+                        <td>Amazon Tech</td>
+                        <td>23/09/2026</td>
+                        <td>R$ 5.200</td>
+                        <td>
+                            <span class="status status-success">
+                                Autorizada
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div id="nf-entrada"
+         class="tab-content">
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>NF</th>
+                        <th>Fornecedor</th>
+                        <th>Entrada</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>00093211</td>
+                        <td>Metalúrgica Global</td>
+                        <td>24/09/2026</td>
+                        <td>R$ 12.500</td>
+                        <td>
+                            <span class="status status-success">
+                                Registrada
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     PESSOAS
+========================================================== -->
+
+<section id="pessoas"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Pessoas e Equipe</h1>
+
+            <p>
+                Vendedores, usuários e indicadores de performance.
+            </p>
+
+        </div>
+
+        <button class="primary-btn"
+                onclick="abrirCadastro('vendedor')">
+
+            <i data-lucide="user-plus"></i>
+            Novo Vendedor
+
+        </button>
+
+    </div>
+
+
+    <div class="grid-2">
+
+        <div class="card">
+
+            <h3 style="font-size:13px">
+                Vendas por Vendedor
+            </h3>
+
+            <div class="chart-container">
+
+                <canvas id="pessoasChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px;margin-bottom:10px">
+                Ranking de Vendas
+            </h3>
+
+            <div class="mini-list">
+
+                <div class="mini-row">
+                    <span>Flávio</span>
+                    <strong>R$ 42.500</strong>
+                </div>
+
+                <div class="mini-row">
+                    <span>Patrícia</span>
+                    <strong>R$ 27.800</strong>
+                </div>
+
+                <div class="mini-row">
+                    <span>Ronald</span>
+                    <strong>R$ 15.200</strong>
+                </div>
+
+                <div class="mini-row">
+                    <span>Sérgio</span>
+                    <strong>R$ 8.400</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="table-scroll">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Vendas</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>#001</td>
+                    <td><strong>Flávio</strong></td>
+                    <td>flavio@amzsolutions.com</td>
+                    <td>R$ 42.500</td>
+                    <td>
+                        <span class="status status-success">
+                            Ativo
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">
+                            Detalhes
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>#002</td>
+                    <td><strong>Patrícia</strong></td>
+                    <td>patricia@amzsolutions.com</td>
+                    <td>R$ 27.800</td>
+                    <td>
+                        <span class="status status-success">
+                            Ativo
+                        </span>
+                    </td>
+                    <td>
+                        <button class="small-btn">
+                            Detalhes
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     IA
+========================================================== -->
+
+<section id="modo_ia"
+         class="module-page">
+
+    <div class="ai-container">
+
+        <div class="ai-header">
+
+            <div class="ai-icon">
+
+                <i data-lucide="sparkles"></i>
+
+            </div>
+
+            <h1>Assistente IA</h1>
+
+            <p>
+                Consulte informações do ERP usando linguagem natural.
+            </p>
+
+        </div>
+
+
+        <div class="ai-chat"
+             id="aiChat">
+
+            <div class="ai-message system">
+
+                Olá, Mario! 👋
+
+                <br><br>
+
+                Sou o assistente de gestão da AMZ Solutions.
+                Posso analisar vendas, estoque, financeiro,
+                compras e indicadores do negócio.
+
+            </div>
+
+
+            <div class="ai-message system">
+
+                <strong>Exemplo:</strong>
+
+                <br>
+
+                "Quais produtos estão abaixo do estoque mínimo?"
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-suggestions">
+
+            <button class="ai-suggestion"
+                    onclick="usarSugestao(this)">
+                Analise minhas vendas
+            </button>
+
+            <button class="ai-suggestion"
+                    onclick="usarSugestao(this)">
+                Quais produtos estão acabando?
+            </button>
+
+            <button class="ai-suggestion"
+                    onclick="usarSugestao(this)">
+                Mostre contas vencidas
+            </button>
+
+            <button class="ai-suggestion"
+                    onclick="usarSugestao(this)">
+                Compare as vendas deste mês
+            </button>
+
+        </div>
+
+
+        <div class="ai-input">
+
+            <input id="aiInput"
+                   class="input-padrao"
+                   placeholder="Digite sua pergunta para a IA..."
+                   onkeydown="if(event.key==='Enter') enviarIA()">
+
+            <button class="primary-btn"
+                    onclick="enviarIA()">
+
+                <i data-lucide="send"></i>
+
+                Enviar
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     CONFIGURAÇÕES
+========================================================== -->
+
+<section id="configuracoes"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1>Configurações</h1>
+
+            <p>
+                Preferências e controle do sistema.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="grid-2">
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px;margin-bottom:15px">
+                Perfil do Usuário
+            </h3>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Nome</label>
+
+                    <input class="input-padrao"
+                           value="Mario Carvalho">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>E-mail</label>
+
+                    <input class="input-padrao"
+                           value="admin@amzsolutions.com">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Perfil</label>
+
+                    <select>
+
+                        <option>Administrador</option>
+                        <option>Gerente</option>
+                        <option>Financeiro</option>
+                        <option>Vendas</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3 style="font-size:13px;margin-bottom:15px">
+                Segurança e Permissões
+            </h3>
+
+            <div class="mini-list">
+
+                <div class="mini-row">
+
+                    <span>Autenticação</span>
+
+                    <span class="status status-success">
+                        Ativa
+                    </span>
+
+                </div>
+
+                <div class="mini-row">
+
+                    <span>Último acesso</span>
+
+                    <span>Hoje, 18:43</span>
+
+                </div>
+
+                <div class="mini-row">
+
+                    <span>Perfil de acesso</span>
+
+                    <strong>Administrador</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================================
+     TELA DE CADASTRO
+========================================================== -->
+
+<section id="cadastro"
+         class="module-page">
+
+    <div class="module-header">
+
+        <div>
+
+            <h1 id="cadastroTitulo">
+                Novo Registro
+            </h1>
+
+            <p id="cadastroDescricao">
+                Preencha as informações abaixo.
+            </p>
+
+        </div>
+
+        <button class="small-btn"
+                onclick="voltarCadastro()">
+
+            <i data-lucide="arrow-left"></i>
+            Cancelar
+
+        </button>
+
+    </div>
+
+
+    <div class="card form-card">
+
+        <form id="formCadastro"
+              onsubmit="salvarCadastro(event)">
+
+            <div id="formCampos"
+                 class="form-grid">
+
+                <!-- preenchido via JS -->
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button type="button"
+                        class="small-btn"
+                        onclick="voltarCadastro()">
+
+                    Cancelar
+
+                </button>
+
+                <button type="submit"
+                        class="primary-btn">
+
+                    <i data-lucide="save"></i>
+                    Salvar Registro
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+
+<!-- ==========================================================
+     MODAL
+========================================================== -->
+
+<div class="modal-overlay"
+     id="modal">
+
+    <div class="modal">
+
+        <div class="modal-icon">
+
+            <i data-lucide="trash-2"></i>
+
+        </div>
+
+        <h3 id="modalTitulo">
+            Confirmar exclusão
+        </h3>
+
+        <p id="modalTexto">
+            Esta ação não poderá ser desfeita.
+        </p>
+
+        <div class="modal-actions">
+
+            <button class="small-btn"
+                    onclick="fecharModal()">
+
+                Cancelar
+
+            </button>
+
+            <button class="danger-btn"
+                    onclick="confirmarExclusao()">
+
+                Sim, excluir
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div class="toast"
+     id="toast">
+</div>
+
+
+
+<script>
+
+/* ==========================================================
+   ICONES
+========================================================== */
+
+lucide.createIcons();
+
+
+/* ==========================================================
+   NAVEGAÇÃO
+========================================================== */
+
+const nomesModulos = {
+
+    dashboard:"Dashboard",
+
+    vendas:"Vendas",
+
+    compras:"Compras",
+
+    estoque:"Estoque",
+
+    logistica:"Logística",
+
+    financeiro:"Financeiro",
+
+    fiscal:"Fiscal e Contábil",
+
+    pessoas:"Pessoas",
+
+    modo_ia:"Modo IA",
+
+    configuracoes:"Configurações",
+
+    cadastro:"Modo de Cadastro"
+
+};
+
+
+let moduloAnterior = "dashboard";
+
+
+function abrirModulo(id,btn){
+
+    document
+        .querySelectorAll(".module-page")
+        .forEach(p => p.classList.remove("active"));
+
+
+    const pagina = document.getElementById(id);
+
+    if(!pagina) return;
+
+    pagina.classList.add("active");
+
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(b => b.classList.remove("active"));
+
+
+    if(btn){
+        btn.classList.add("active");
+    }
+
+
+    document.getElementById("topbarTitle").textContent =
+        "Módulo: " + nomesModulos[id];
+
+
+    fecharSidebar();
+
+}
+
+
+function toggleSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+function fecharSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+}
+
+
+/* ==========================================================
+   TABS
+========================================================== */
+
+function abrirAba(btn,id){
+
+    const container =
+        btn.closest(".module-page");
+
+
+    container
+        .querySelectorAll(".tab-btn")
+        .forEach(b =>
+            b.classList.remove("active")
+        );
+
+
+    container
+        .querySelectorAll(".tab-content")
+        .forEach(c =>
+            c.classList.remove("active")
+        );
+
+
+    btn.classList.add("active");
+
+    document
+        .getElementById(id)
+        .classList.add("active");
+
+}
+
+
+/* ==========================================================
+   TEMA
+========================================================== */
+
+const themeToggle =
+    document.getElementById("themeToggle");
+
+
+themeToggle.addEventListener(
+    "click",
+    () => {
+
+        document.body
+            .classList.toggle("dark-mode");
+
+
+        const dark =
+            document.body.classList.contains("dark-mode");
+
+
+        themeToggle.innerHTML =
+            dark
+                ? '<i data-lucide="sun"></i>'
+                : '<i data-lucide="moon"></i>';
+
+
+        lucide.createIcons();
+
+
+        atualizarGraficos();
+
+    }
+);
+
+
+/* ==========================================================
+   TOAST
+========================================================== */
+
+let toastTimer;
+
+
+function showToast(msg,type="success"){
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.textContent = msg;
+
+
+    if(type === "error"){
+        toast.style.background =
+            "var(--danger)";
+    }
+
+    else if(type === "warning"){
+        toast.style.background =
+            "var(--warning)";
+    }
+
+    else{
+        toast.style.background =
+            "var(--success)";
+    }
+
+
+    toast.classList.add("show");
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer =
+        setTimeout(
+            () => toast.classList.remove("show"),
+            3000
+        );
+
+}
+
+
+/* ==========================================================
+   FILTRO DE TABELA
+========================================================== */
+
+function filtrarTabela(input,tabelaId){
+
+    const termo =
+        input.value.toLowerCase();
+
+
+    const tabela =
+        document.getElementById(tabelaId);
+
+
+    if(!tabela) return;
+
+
+    tabela
+        .querySelectorAll("tbody tr")
+        .forEach(row => {
+
+            row.style.display =
+                row.textContent
+                    .toLowerCase()
+                    .includes(termo)
+                        ? ""
+                        : "none";
+
+        });
+
+}
+
+
+/* ==========================================================
+   CADASTROS
+========================================================== */
+
+const configuracoesCadastro = {
+
+    cliente:{
+
+        titulo:"Novo Cliente",
+
+        descricao:
+            "Cadastre uma nova empresa cliente.",
+
+        campos:[
+
+            ["CNPJ","text","00.000.000/0000-00",true],
+
+            ["Razão Social","text","Nome da empresa",true],
+
+            ["Nome Fantasia","text","Nome comercial",false],
+
+            ["Telefone","text","(92) 00000-0000",false],
+
+            ["E-mail","email","empresa@email.com",false],
+
+            ["Endereço","text","Rua, número",false]
+
+        ]
+
+    },
+
+
+    fornecedor:{
+
+        titulo:"Novo Fornecedor",
+
+        descricao:
+            "Cadastre um fornecedor.",
+
+        campos:[
+
+            ["CNPJ","text","00.000.000/0000-00",true],
+
+            ["Nome / Empresa","text","Nome do fornecedor",true],
+
+            ["Contato","text","Pessoa de contato",false],
+
+            ["Telefone","text","(92) 00000-0000",false],
+
+            ["E-mail","email","fornecedor@email.com",false]
+
+        ]
+
+    },
+
+
+    vendedor:{
+
+        titulo:"Novo Vendedor",
+
+        descricao:
+            "Cadastre um novo vendedor.",
+
+        campos:[
+
+            ["Nome","text","Nome completo",true],
+
+            ["E-mail","email","vendedor@empresa.com",true],
+
+            ["Telefone","text","(92) 00000-0000",false],
+
+            ["Meta Mensal","number","0",false]
+
+        ]
+
+    },
+
+
+    transportadora:{
+
+        titulo:"Nova Transportadora",
+
+        descricao:
+            "Cadastre uma empresa de transporte.",
+
+        campos:[
+
+            ["Nome da Empresa","text","Transportadora",true],
+
+            ["Tipo de Veículo","text","Caminhão Baú",false],
+
+            ["Telefone","text","(92) 00000-0000",false],
+
+            ["Contato","text","Responsável",false]
+
+        ]
+
+    },
+
+
+    categoria:{
+
+        titulo:"Nova Categoria",
+
+        descricao:
+            "Crie uma categoria de produtos.",
+
+        campos:[
+
+            ["Nome da Categoria","text","Ex.: Equipamentos",true],
+
+            ["Descrição","text","Descrição da categoria",false]
+
+        ]
+
+    },
+
+
+    produto:{
+
+        titulo:"Novo Produto",
+
+        descricao:
+            "Cadastre um produto no estoque.",
+
+        campos:[
+
+            ["SKU","text","Ex.: PROD-001",true],
+
+            ["Nome do Produto","text","Nome comercial",true],
+
+            ["Categoria","text","Categoria",true],
+
+            ["Estoque Inicial","number","0",true],
+
+            ["Estoque Mínimo","number","0",true],
+
+            ["Valor Unitário","number","0.00",true]
+
+        ]
+
+    },
+
+
+    pedido:{
+
+        titulo:"Novo Pedido de Venda",
+
+        descricao:
+            "Registre um novo pedido.",
+
+        campos:[
+
+            ["Cliente","text","Cliente",true],
+
+            ["Vendedor","text","Vendedor",true],
+
+            ["Data","date","",true],
+
+            ["Valor Total","number","0.00",true],
+
+            ["Observações","text","Observações",false]
+
+        ]
+
+    },
+
+
+    compra:{
+
+        titulo:"Nova Ordem de Compra",
+
+        descricao:
+            "Registre uma nova compra.",
+
+        campos:[
+
+            ["Fornecedor","text","Fornecedor",true],
+
+            ["Data","date","",true],
+
+            ["Valor","number","0.00",true],
+
+            ["Frete","number","0.00",false],
+
+            ["Observações","text","Observações",false]
+
+        ]
+
+    },
+
+
+    movimentacao:{
+
+        titulo:"Nova Movimentação Financeira",
+
+        descricao:
+            "Registre uma entrada ou saída.",
+
+        campos:[
+
+            ["Descrição","text","Ex.: Pagamento fornecedor",true],
+
+            ["Tipo","text","Receita / Despesa",true],
+
+            ["Valor","number","0.00",true],
+
+            ["Vencimento","date","",true],
+
+            ["Observação","text","Detalhes",false]
+
+        ]
+
+    }
+
+};
+
+
+function abrirCadastro(tipo){
+
+    moduloAnterior =
+        document
+            .querySelector(".module-page.active")
+            ?.id || "dashboard";
+
+
+    const config =
+        configuracoesCadastro[tipo];
+
+
+    if(!config) return;
+
+
+    document
+        .querySelectorAll(".module-page")
+        .forEach(p =>
+            p.classList.remove("active")
+        );
+
+
+    document
+        .getElementById("cadastro")
+        .classList.add("active");
+
+
+    document
+        .getElementById("cadastroTitulo")
+        .textContent =
+            config.titulo;
+
+
+    document
+        .getElementById("cadastroDescricao")
+        .textContent =
+            config.descricao;
+
+
+    document
+        .getElementById("topbarTitle")
+        .textContent =
+            "Modo de Cadastro: " +
+            config.titulo;
+
+
+    const container =
+        document.getElementById("formCampos");
+
+
+    container.innerHTML = "";
+
+
+    config.campos.forEach(
+        (campo,index) => {
+
+            const [
+                label,
+                type,
+                placeholder,
+                required
+            ] = campo;
+
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "form-group";
+
+
+            if(label === "Observações"){
+                div.classList.add("full");
+            }
+
+
+            div.innerHTML = `
+
+                <label>
+                    ${label}
+                </label>
+
+                <input
+                    class="input-padrao"
+                    type="${type}"
+                    placeholder="${placeholder}"
+                    ${required ? "required" : ""}
+                >
+
+            `;
+
+
+            container.appendChild(div);
+
+        }
+    );
+
+
+    lucide.createIcons();
+
+}
+
+
+function voltarCadastro(){
+
+    const btn =
+        [...document.querySelectorAll(".nav-btn")]
+            .find(
+                b =>
+                    b.textContent
+                    .trim()
+                    .includes(
+                        nomesModulos[moduloAnterior]
+                    )
+            );
+
+
+    if(btn){
+
+        abrirModulo(
+            moduloAnterior,
+            btn
+        );
+
+    }
+
+    else{
+
+        abrirModulo(
+            "dashboard",
+            document.querySelector(".nav-btn")
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   SALVAR CADASTRO
+========================================================== */
+
+function salvarCadastro(event){
+
+    event.preventDefault();
+
+
+    const inputs =
+        document
+            .getElementById("formCampos")
+            .querySelectorAll("input");
+
+
+    const dados = {};
+
+
+    inputs.forEach(
+        input => {
+
+            const label =
+                input
+                    .previousElementSibling
+                    ?.textContent
+                    .trim();
+
+
+            dados[label] =
+                input.value;
+
+        }
+    );
+
+
+    console.log(
+        "Payload preparado para Flask:",
+        dados
+    );
+
+
+    showToast(
+        "Registro salvo com sucesso. API pronta para integração com Flask."
+    );
+
+
+    setTimeout(
+        voltarCadastro,
+        600
+    );
+
+}
+
+
+/* ==========================================================
+   IA
+========================================================== */
+
+function usarSugestao(button){
+
+    document
+        .getElementById("aiInput")
+        .value =
+            button.textContent.trim();
+
+
+    enviarIA();
+
+}
+
+
+function enviarIA(){
+
+    const input =
+        document.getElementById("aiInput");
+
+
+    const texto =
+        input.value.trim();
+
+
+    if(!texto) return;
+
+
+    const chat =
+        document.getElementById("aiChat");
+
+
+    const user =
+        document.createElement("div");
+
+
+    user.className =
+        "ai-message user";
+
+
+    user.textContent =
+        texto;
+
+
+    chat.appendChild(user);
+
+
+    input.value = "";
+
+
+    setTimeout(
+        () => {
+
+            const resposta =
+                document.createElement("div");
+
+
+            resposta.className =
+                "ai-message system";
+
+
+            resposta.innerHTML = `
+                <strong>Análise preliminar</strong>
+                <br><br>
+                Com os dados atuais do ERP,
+                identifiquei <strong>3 produtos abaixo
+                do estoque mínimo</strong>,
+                <strong>2 contas vencidas</strong>
+                e <strong>4 entregas atrasadas</strong>.
+                <br><br>
+                Quando o backend estiver conectado,
+                esta resposta será gerada diretamente
+                a partir do banco de dados.
+            `;
+
+
+            chat.appendChild(resposta);
+
+
+            chat.scrollTop =
+                chat.scrollHeight;
+
+        },
+        700
+    );
+
+}
+
+
+/* ==========================================================
+   MODAL
+========================================================== */
+
+let exclusaoPendente = null;
+
+
+function abrirModal(titulo,texto,acao){
+
+    exclusaoPendente = acao;
+
+
+    document
+        .getElementById("modalTitulo")
+        .textContent =
+            titulo;
+
+
+    document
+        .getElementById("modalTexto")
+        .textContent =
+            texto;
+
+
+    document
+        .getElementById("modal")
+        .classList.add("active");
+
+}
+
+
+function fecharModal(){
+
+    document
+        .getElementById("modal")
+        .classList.remove("active");
+
+
+    exclusaoPendente = null;
+
+}
+
+
+function confirmarExclusao(){
+
+    if(exclusaoPendente){
+        exclusaoPendente();
+    }
+
+    fecharModal();
+
+}
+
+
+/* ==========================================================
+   CHARTS
+========================================================== */
+
+let dashChart;
+let financeChart;
+let cashChart;
+let pessoasChart;
+
+
+function chartColors(){
+
+    const dark =
+        document.body
+            .classList
+            .contains("dark-mode");
+
+
+    return {
+
+        text:
+            dark
+                ? "#8b96a8"
+                : "#738096",
+
+        border:
+            dark
+                ? "#28303d"
+                : "#e3e8ef",
+
+        primary:
+            dark
+                ? "#58a6ff"
+                : "#315efb"
+
+    };
+
+}
+
+
+function criarGraficos(){
+
+    const c =
+        chartColors();
+
+
+    dashChart =
+        new Chart(
+            document
+                .getElementById("dashChart"),
+            {
+
+                type:"line",
+
+                data:{
+
+                    labels:[
+                        "Jan","Fev","Mar",
+                        "Abr","Mai","Jun",
+                        "Jul","Ago","Set"
+                    ],
+
+                    datasets:[{
+
+                        data:[
+                            50000,
+                            62000,
+                            58000,
+                            75000,
+                            82000,
+                            79000,
+                            88000,
+                            91000,
+                            93900
+                        ],
+
+                        borderColor:c.primary,
+
+                        backgroundColor:
+                            "rgba(49,94,251,.10)",
+
+                        borderWidth:3,
+
+                        tension:.35,
+
+                        fill:true,
+
+                        pointRadius:3
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            display:false
+                        }
+                    },
+
+                    scales:{
+
+                        x:{
+                            grid:{
+                                color:c.border
+                            },
+
+                            ticks:{
+                                color:c.text
+                            }
+                        },
+
+                        y:{
+                            grid:{
+                                color:c.border
+                            },
+
+                            ticks:{
+                                color:c.text
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    financeChart =
+        new Chart(
+            document
+                .getElementById("financeChart"),
+            {
+
+                type:"bar",
+
+                data:{
+
+                    labels:[
+                        "Mai",
+                        "Jun",
+                        "Jul",
+                        "Ago",
+                        "Set"
+                    ],
+
+                    datasets:[
+
+                        {
+                            label:"Entradas",
+
+                            data:[
+                                62000,
+                                71000,
+                                78000,
+                                84000,
+                                93900
+                            ],
+
+                            backgroundColor:
+                                "#16a36a"
+                        },
+
+                        {
+                            label:"Saídas",
+
+                            data:[
+                                41000,
+                                48000,
+                                52000,
+                                59000,
+                                57000
+                            ],
+
+                            backgroundColor:
+                                "#e34d59"
+                        }
+
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            position:"bottom"
+                        }
+                    },
+
+                    scales:{
+                        x:{
+                            grid:{
+                                display:false
+                            },
+
+                            ticks:{
+                                color:c.text
+                            }
+                        },
+
+                        y:{
+                            grid:{
+                                color:c.border
+                            },
+
+                            ticks:{
+                                color:c.text
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+
+    pessoasChart =
+        new Chart(
+            document
+                .getElementById("pessoasChart"),
+            {
+
+                type:"bar",
+
+                data:{
+
+                    labels:[
+                        "Flávio",
+                        "Patrícia",
+                        "Ronald",
+                        "Sérgio"
+                    ],
+
+                    datasets:[{
+
+                        data:[
+                            42500,
+                            27800,
+                            15200,
+                            8400
+                        ],
+
+                        backgroundColor:[
+                            "#58a6ff",
+                            "#315efb",
+                            "#58a6ff",
+                            "#315efb"
+                        ],
+
+                        borderRadius:6
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            display:false
+                        }
+                    },
+
+                    scales:{
+                        x:{
+                            grid:{
+                                display:false
+                            }
+                        },
+
+                        y:{
+                            grid:{
+                                color:c.border
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+
+    cashChart =
+        new Chart(
+            document
+                .getElementById("cashChart"),
+            {
+
+                type:"line",
+
+                data:{
+
+                    labels:[
+                        "24/09",
+                        "25/09",
+                        "26/09",
+                        "27/09",
+                        "28/09",
+                        "29/09",
+                        "30/09"
+                    ],
+
+                    datasets:[
+
+                        {
+                            label:"Saldo projetado",
+
+                            data:[
+                                23850,
+                                21400,
+                                28200,
+                                24100,
+                                30100,
+                                26700,
+                                32500
+                            ],
+
+                            borderColor:
+                                "#315efb",
+
+                            borderWidth:3,
+
+                            tension:.3
+
+                        }
+
+                    ]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    maintainAspectRatio:false,
+
+                    plugins:{
+                        legend:{
+                            display:false
+                        }
+                    }
+
+                }
+
+            }
+        );
+
+}
+
+
+function atualizarGraficos(){
+
+    const c =
+        chartColors();
+
+
+    [
+        dashChart,
+        financeChart,
+        pessoasChart,
+        cashChart
+    ]
+    .filter(Boolean)
+    .forEach(
+        chart => {
+
+            chart.options.scales.x.ticks.color =
+                c.text;
+
+            chart.options.scales.y.ticks.color =
+                c.text;
+
+            chart.update();
+
+        }
+    );
+
+}
+
+
+/* ==========================================================
+   INICIALIZAÇÃO
+========================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        criarGraficos();
+
+        lucide.createIcons();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
